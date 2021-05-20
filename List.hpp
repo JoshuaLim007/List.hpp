@@ -12,6 +12,10 @@
 #define LIST_H_
 #include <cstddef>
 #include <stdexcept>
+
+/*
+    Vector equivalent
+*/
 template <class T>
 class List
 {
@@ -38,6 +42,8 @@ public:
     T &operator[](int) const;
     void remove_all();
     void trim();
+    T &at(int);
+    void resize(int);
     List<T> &operator=(const List<T> &other);
 };
 
@@ -353,14 +359,7 @@ void List<T>::trim()
 template <class T>
 T &List<T>::operator[](int index) const
 {
-    if (index > length)
-    {
-        throw std::out_of_range("Index out of range!");
-    }
-    else
-    {
-        return arr[index];
-    }
+    return arr[index];
 }
 
 /*********************************************************************
@@ -393,5 +392,58 @@ void List<T>::copy(T *start, T *end, T *destination)
         ++destination;
     }
 }
+/*********************************************************************
+** Function: at
+** Description: gets element at index
+** Parameters: int index
+** Pre-Conditions: int
+** Post-Conditions: element at index
+*********************************************************************/
+template <class T>
+T &List<T>::at(int index)
+{
+    if (index > length)
+    {
+        throw std::out_of_range("Index out of range!");
+    }
+    else
+    {
+        return arr + index;
+    }
+}
+/*********************************************************************
+** Function: resize
+** Description: resize the allocated space
+** Parameters: int size of array
+** Pre-Conditions: int
+** Post-Conditions: none
+*********************************************************************/
+template <class T>
+void List<T>::resize(int size)
+{
+    if (number_of_elements > size)
+    {
+        number_of_elements = size;
+        //throw std::out_of_range("Number of elements exceed the desired capacity!");
+    }
+    //int newSize = length > 0 ? length * 2 : 1;
+    T *temp = new T[size];
+    if (length > 0)
+    {
+        copy(arr, arr + size, temp);
+    }
 
+    if (length > 0)
+    {
+        delete[] arr;
+    }
+    else
+    {
+        delete arr;
+    }
+
+    length = size;
+
+    arr = temp;
+}
 #endif
